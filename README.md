@@ -224,40 +224,6 @@ aicl_size = len(tensor_base85) + 30           # ≈110KB
 
 ---
 
-## 9. 实施指南
-
-### 9.1 解析器实现要点
-```python
-def parse_aicl(data: str) -> dict:
-    stack = []
-    current = {}
-    buffer = ""
-    state = "READY"
-    
-    for char in data:
-        if char == '[' and state == "READY":
-            state = "TYPE"
-            marker = ""
-        elif char == ':' and state == "TYPE":
-            state = "VALUE"
-        elif char == ']' and state == "VALUE":
-            # 根据marker处理buffer值
-            if marker == 's': value = str(buffer)
-            elif marker == 'i': value = int(buffer)
-            # ...其他类型处理
-            current[marker] = value
-            state = "READY"
-            buffer = ""
-        else:
-            buffer += char
-    return current
-```
-
-### 9.2 开发约束
-1. **严格模式**：拒绝包含非AICL文本的消息
-2. **类型验证**：收到`[i:]`时验证整数格式
-3. **会话超时**：建议实现30秒自动会话清理
-4. **大小限制**：单消息建议不超过10MB
 
 ---
 
@@ -266,5 +232,5 @@ AICL通过其强类型系统、二进制友好设计和零注释原则，为Agen
 
 > **版本**：LightAICL v1.0  
 > **发布日期**：2025年7月21日  
-> **作者**：DeepSeek-R1 & 用户联合设计  
+> **作者**：DeepSeek-R1 & wwaa321联合设计  
 > **许可**：Apache License 2.0
